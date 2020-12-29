@@ -8,18 +8,16 @@ Date: 29/12/20
 Description:
 """
 from battleships_client import BattleshipsClient
-from threading import Thread
+from logger import Logger
 
 
 def main():
-    init_client = BattleshipsClient("127.0.0.1")
-    listen_client = BattleshipsClient("127.0.0.1")
-
-    init_thread = Thread(target=init_client.send_init_game_message)
-    listen_thread = Thread(target=listen_client.wait_for_init)
-
-    listen_thread.start()
-    init_thread.start()
+    console_logger = Logger()
+    listen_client = BattleshipsClient("127.0.0.1", 11111, 12345, console_logger)
+    listen_client.wait_for_init()
+    listen_client.send_init_game_message()
+    data = listen_client.receive_message()
+    listen_client.send_response_to_attempt(2)
 
 
 if __name__ == '__main__':
