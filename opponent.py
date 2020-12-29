@@ -16,8 +16,10 @@ def main():
     init_client = BattleshipsClient("127.0.0.1", 12345, 11111, console_logger)
     init_client.send_init_game_message()
     init_client.wait_for_init()
+    init_client.send_board_setup_message()
+    init_client.wait_for_board_setup()
     init_client.send_attempt_message(1, 1)
-    data = init_client.receive_message()
+    # data = init_client.receive_message()
 
 
 if __name__ == '__main__':

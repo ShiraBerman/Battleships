@@ -45,6 +45,12 @@ class BattleshipsClient:
                     self.logger.log(f"Data is init message: {data}")
                     break
 
+    def wait_for_board_setup(self):
+        data = None
+        while data != BOARD_SETUP_DATA:
+            data = self.receive_message()
+        return data
+
     def send_init_game_message(self):
         self.socket = socket(AF_INET)
         self.socket.connect((self.dst_host, self.dst_port))
@@ -67,4 +73,3 @@ class BattleshipsClient:
 
     def send_response_to_attempt(self, status: int):
         self.socket.sendall(b"\x00\x00\x00\x00\x00" + status.to_bytes(BYTE_SIZE, BIG_ENDIAN) + b"\x00\x00")
-
