@@ -5,7 +5,7 @@ Usage: player.py
 
 Date: 29/12/20
 
-Description:
+Description: A Battleships Player.
 """
 from threading import Thread
 from socket import error
