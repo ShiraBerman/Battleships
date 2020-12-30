@@ -9,17 +9,18 @@ Description: An opponent client for testing.
 """
 from battleships_client import BattleshipsClient
 from logger import Logger
+from player import Player
+from player_cli import Menu
 
 
 def main():
     console_logger = Logger()
-    init_client = BattleshipsClient("127.0.0.1", 12345, 11111, console_logger)
-    init_client.send_init_game_message()
-    init_client.wait_for_init()
-    init_client.send_board_setup_message()
-    init_client.wait_for_board_setup()
-    init_client.send_attempt_message(1, 1)
-    # data = init_client.receive_message()
+    client = BattleshipsClient("127.0.0.1", 12346, 11111, console_logger)
+    init_player = Player(Menu(), client)
+
+    init_player.choose_board()
+    init_player.choose_player_order()
+    init_player.play()
 
 
 if __name__ == '__main__':

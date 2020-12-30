@@ -35,4 +35,22 @@ class Menu:
         print("The other player is ready!")
 
     def get_action(self):
-        print("Choose an action from the menu:\nattempt\ndisplay")
+        return input("Choose an action from the menu:\n(1) attempt\n(2) display\n")
+
+    def display_board(self, board):
+        print(board)
+
+    def get_index_for_attempt(self):
+        coordinates = input("Enter X and Y coordinates: (Ex: 1, 3)\n")
+        x_coor, y_coor = coordinates.split(", ")
+        return int(x_coor), int(y_coor)
+
+    def display_correct_attempt(self):
+        print("Correct!")
+
+    def display_full_ship_hit(self):
+        self.display_correct_attempt()
+        print("You hit a full battleship!")
+
+    def display_incorrect_attempt(self):
+        print("Incorrect!")

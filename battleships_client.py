@@ -22,8 +22,8 @@ HOST = "0.0.0.0"
 
 
 class BattleshipsClient:
-    def __init__(self, host, src_port, dst_port, logger):
-        self.dst_host = host
+    def __init__(self, dst_host, src_port, dst_port, logger):
+        self.dst_host = dst_host
         self.src_port = src_port
         self.dst_port = dst_port
         self.logger = logger
@@ -73,3 +73,12 @@ class BattleshipsClient:
 
     def send_response_to_attempt(self, status: int):
         self.socket.sendall(b"\x00\x00\x00\x00\x00" + status.to_bytes(BYTE_SIZE, BIG_ENDIAN) + b"\x00\x00")
+
+    def get_data_type(self, data: bytes):
+        print(data[5])
+
+    def get_response_value(self, data):
+        return data[5]
+
+    def get_indexs(self):
+        pass
