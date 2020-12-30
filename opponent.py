@@ -12,10 +12,14 @@ from logger import Logger
 from player import Player
 from player_cli import Menu
 
+DST_HOST = "127.0.0.1"
+SRC_PORT = 12346
+DST_PORT = 11111
+
 
 def main():
     console_logger = Logger()
-    client = BattleshipsClient("127.0.0.1", 12346, 11111, console_logger)
+    client = BattleshipsClient(DST_HOST, SRC_PORT, DST_PORT, console_logger)
     init_player = Player(Menu(), client)
 
     init_player.choose_board()

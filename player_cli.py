@@ -5,26 +5,15 @@ Usage: player_cli.py
 
 Date: 29/12/20
 
-Description:
+Description: A CLI for the player.
 """
-
-DIM = 10
-EXAMPLE_BOARD = "- - - - - - - o o o\n" + \
-                "o - - - - - - - - -\n" + \
-                "o - - - - o - - - -\n" + \
-                "o - - - - o - - - -\n" + \
-                "o - - - - - - - - -\n" + \
-                "- - - - - o o o o o\n" + \
-                "o - - - - - - - - -\n" + \
-                "o - - - - - - - - -\n" + \
-                "o - - - - o - - - -\n" + \
-                "- - - - - o - - - -\n"
+from consts import PlayerConsts
 
 
 class Menu:
     def get_board(self):
-        board = input(f"Enter your 10X10 board:\nExample:\n{EXAMPLE_BOARD}")
-        for i in range(DIM - 1):
+        board = input(f"Enter your 10X10 board:\nExample:\n{PlayerConsts.EXAMPLE_BOARD}")
+        for i in range(PlayerConsts.DIM - 1):
             board += "\n" + input()
         return board
 
@@ -57,3 +46,6 @@ class Menu:
 
     def display_victory_message(self):
         print("You won!")
+
+    def display_error_code(self, code):
+        print(f"You received error code {code}!")
