@@ -26,11 +26,9 @@ class BattleshipsClient:
             ip_socket.listen(1)
             conn_socket, address = ip_socket.accept()
             self.socket = conn_socket
-            self.logger.log(f"Connected by: {address}")
             while True:
                 data = BattleshipsData(conn_socket.recv(NetworkConsts.DATA_SIZE))
                 if data.is_data_init_message():
-                    self.logger.log(f"Data is init message: {data}")
                     break
 
     def wait_for_board_setup(self):
@@ -43,7 +41,6 @@ class BattleshipsClient:
         while True:
             data = self.socket.recv(NetworkConsts.DATA_SIZE)
             if data:
-                self.logger.log(f"data: {data}")
                 return data
 
     def send_init_game_message(self):
@@ -60,10 +57,13 @@ class BattleshipsClient:
                             + b"\x00\x00\x00\x00")
 
     def send_response_to_attempt(self, status: int):
-        self.socket.sendall(b"\x00\x00\x00\x00\x00\x01" + status.to_bytes(NetworkConsts.BYTE_SIZE, NetworkConsts.BIG_ENDIAN) + b"\x00\x00")
+        self.socket.sendall(b"\x00\x00\x00\x00\x00\x01"
+                            + status.to_bytes(NetworkConsts.BYTE_SIZE, NetworkConsts.BIG_ENDIAN)
+                            + b"\x00\x00")
 
     def send_game_over_message(self):
         self.socket.sendall(NetworkConsts.GAME_OVER_DATA)
 
     def send_error_message(self, error_code):
-        self.socket.sendall(b"\x00\x00\x00\x00\x00\x00\x00\x00" + error_code.to_bytes(NetworkConsts.BYTE_SIZE, NetworkConsts.BIG_ENDIAN))
+        self.socket.sendall(b"\x00\x00\x00\x00\x00\x00\x00\x00"
+                            + error_code.to_bytes(NetworkConsts.BYTE_SIZE, NetworkConsts.BIG_ENDIAN))

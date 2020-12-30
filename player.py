@@ -9,7 +9,7 @@ Description:
 """
 from threading import Thread
 from socket import error
-from consts import PlayerConsts
+from consts import PlayerConsts, Error, HitStatus
 from data import BattleshipsData
 from time import sleep
 
@@ -101,10 +101,10 @@ class Player:
         x_coor, y_coor = data.get_indexs()
         cell_value = self.board[y_coor - 1][x_coor - 1]
         if cell_value == PlayerConsts.EMPTY_CELL:
-            self.client.send_response_to_attempt(0)
+            self.client.send_response_to_attempt(HitStatus.NO_HIT)
             self.is_current_turn = True
         elif (cell_value == PlayerConsts.SHIP_CELL) or (cell_value == PlayerConsts.DEAD_SHIP_CELL):
-            self.client.send_response_to_attempt(1)
+            self.client.send_response_to_attempt(HitStatus.HIT)
             self.board[y_coor - 1][x_coor - 1] = PlayerConsts.DEAD_SHIP_CELL
             self.update_game_over_status()
 
@@ -125,15 +125,22 @@ class Player:
                 pass
 
     def received_data_handler(self, data: BattleshipsData):
-        if data.get_status_code() > 0:
+        if data.get_status_code() > Error.NO_ERROR:
             self.menu.display_error_code(data.get_status_code())
+        elif data.is_data_init_message():
+            self.client.send_error_message(Error.UNEXPECTED_START_MSG)
+        elif data.is_data_board_setup_msg():
+            self.client.send_error_message(Error.UNEXPECTED_BOARD_MSG)
         elif self.is_current_turn:
             if data.is_response_to_attempt_message():
-                response_actions = [self.incorrect_attempt, self.correct_attempt, self.correct_attempt_full_ship]
-                response_actions[data.get_response_value()]()
+                if data.get_response_value() > 2:
+                    self.client.send_error_message(Error.INVALID_RESPONSE_STATUS)
+                else:
+                    response_actions = [self.incorrect_attempt, self.correct_attempt, self.correct_attempt_full_ship]
+                    response_actions[data.get_response_value()]()
         else:
             if data.is_attempt_message():
                 if not data.is_indexs_valid():
-                    self.client.send_error_message(2)
+                    self.client.send_error_message(Error.INDEX_OUT_OF_RANGE)
                 else:
                     self.send_response_to_attempt(data)

@@ -27,7 +27,11 @@ class Menu:
         return input("Choose an action from the menu:\n(1) attempt\n(2) display\n")
 
     def display_board(self, board):
-        print(board)
+        for row in board:
+            format_row = ""
+            for cell in row:
+                format_row += cell + " "
+            print(format_row)
 
     def get_index_for_attempt(self):
         coordinates = input("Enter X and Y coordinates: (Ex: 1, 3)\n")
