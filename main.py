@@ -6,6 +6,9 @@ Usage: main.py
 Date: 29/12/20
 
 Description:
+
+Note: If you to run both players from the same computer,
+    run main.py as the second player, than opponent.py as the first.
 """
 from battleships_client import BattleshipsClient
 from logger import Logger

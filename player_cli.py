@@ -54,3 +54,6 @@ class Menu:
 
     def display_incorrect_attempt(self):
         print("Incorrect!")
+
+    def display_victory_message(self):
+        print("You won!")

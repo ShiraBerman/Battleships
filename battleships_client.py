@@ -13,6 +13,7 @@ PORT = 12346
 DATA_SIZE = 9
 GAME_INIT_DATA = b"\x01\x00\x00\x00\x00\x00\x00\x00\x00"
 BOARD_SETUP_DATA = b"\x00\x01\x00\x00\x00\x00\x00\x00\x00"
+GAME_OVER_DATA = b"\x00\x00\x00\x00\x00\x00\x00\x01\x00"
 INCORRECT_ATTEMPT = 0
 CORRECT_ATTEMPT = 1
 FULL_BATTLESHIP = 2
@@ -72,13 +73,25 @@ class BattleshipsClient:
                             + b"\x00\x00\x00\x00")
 
     def send_response_to_attempt(self, status: int):
-        self.socket.sendall(b"\x00\x00\x00\x00\x00" + status.to_bytes(BYTE_SIZE, BIG_ENDIAN) + b"\x00\x00")
+        self.socket.sendall(b"\x00\x00\x00\x00\00\x01" + status.to_bytes(BYTE_SIZE, BIG_ENDIAN) + b"\x00\x00")
+
+    def send_game_over_message(self):
+        self.socket.sendall(GAME_OVER_DATA)
+
+    def is_game_over_message(self, data):
+        return data == GAME_OVER_DATA
+
+    def is_response_to_attempt_message(self, data):
+        return data[5] > 0
+
+    def is_attempt_message(self, data):
+        return data[2] > 0
 
     def get_data_type(self, data: bytes):
         print(data[5])
 
     def get_response_value(self, data):
-        return data[5]
+        return data[6]
 
-    def get_indexs(self):
-        pass
+    def get_indexs(self, data):
+        return data[3], data[4]
